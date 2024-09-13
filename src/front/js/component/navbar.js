@@ -11,7 +11,7 @@ export const Navbar = () => {
         <nav className="navbar navbar-light bg-dark mb-3">
             <Link to="/">
                 <span className="navbar-brand mb-0 h1 ms-5 logo">
-                <i class="fa-solid fa-truck-fast"></i>ADRA 
+                <i className="fa-solid fa-truck-fast"></i>ADRA 
                 </span>
             </Link>
             <div className="ml-auto">
@@ -22,7 +22,7 @@ export const Navbar = () => {
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <i class="fa-solid fa-truck-fast"></i>
+                            <i className="fa-solid fa-truck-fast"></i>
                         </button>
                         <ul className="dropdown-menu">
                             
