@@ -10,7 +10,7 @@ export const Navbar = () => {
     return (
         <nav className="navbar navbar-light bg-dark mb-3">
             <Link to="/">
-                <span className="navbar-brand mb-0 h1 ms-5">
+                <span className="navbar-brand mb-0 h1 ms-5 logo">
                 <i class="fa-solid fa-truck-fast"></i>ADRA 
                 </span>
             </Link>
@@ -18,7 +18,7 @@ export const Navbar = () => {
                     <div className="btn-group">
                         <button
                             type="button"
-                            className="btn btn-primary dropdown-toggle me-5"
+                            className="btn btn-primary dropdown-toggle me-5 cart-nav"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >

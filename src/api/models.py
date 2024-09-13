@@ -10,7 +10,7 @@ class User(db.Model):
     last_name = db.Column(db.String(80), nullable=False)
     mobile = db.Column(db.Integer, unique=True, nullable=False)
     address = db.Column(db.String(1000), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
     is_active = db.Column(db.Boolean(), nullable=False, default=True)
 
@@ -105,3 +105,4 @@ class OrderDetail(db.Model):
             "quantity": self.quantity,
             "price": self.price,
         }
+
