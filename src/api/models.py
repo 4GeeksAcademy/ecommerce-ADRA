@@ -1,16 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
-# Tabla de Usuarios
 class User(db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    mobile = db.Column(db.Integer, unique=True, nullable=False)
+    mobile = db.Column(db.String(20), unique=True, nullable=False)
     address = db.Column(db.String(1000), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False, unique=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     is_active = db.Column(db.Boolean(), nullable=False, default=True)
 
@@ -23,7 +23,6 @@ class User(db.Model):
             "email": self.email,
         }
 
-# Tabla de Productos
 class Product(db.Model):
     __tablename__ = 'Product'
     id = db.Column(db.Integer, primary_key=True)
@@ -59,12 +58,11 @@ class Category(db.Model):
             "name": self.name,
         }
 
-# Tabla de Órdenes
 class Order(db.Model):
     __tablename__ = 'Order'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     total_amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), nullable=False)
 
@@ -82,7 +80,6 @@ class Order(db.Model):
             "status": self.status,
         }
 
-# Tabla de Detalles de Órdenes
 class OrderDetail(db.Model):
     __tablename__ = 'OrderDetail'
     id = db.Column(db.Integer, primary_key=True)
@@ -105,4 +102,10 @@ class OrderDetail(db.Model):
             "quantity": self.quantity,
             "price": self.price,
         }
+
+
+
+
+
+
 
