@@ -53,8 +53,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 			signup: async (name, last_name, email, password, mobile, address) => {
-
-
                 try {
                     const response = await fetch(apiUrl + "/signup", {
                         method: 'POST',
@@ -70,11 +68,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                             address: address,
                         }),
                     });
-
+            
                     if (response.ok) {
                         const data = await response.json();
-                        
-                        // Aquí puedes almacenar el token si el backend te lo envía después de registrarse
                         const token = data.token;
                         if (token) {
                             localStorage.setItem('token', token); // Guardar el token en localStorage
@@ -96,12 +92,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 errorMsg: null
                             });
                         }
+                        return true; // Registro exitoso
                     } else {
                         const errorData = await response.json();
                         setStore({
                             errorMsg: errorData.msg,
                             successMsg: null
                         });
+                        return false; // Fallo en el registro
                     }
                 } catch (error) {
                     console.error("Error al registrar usuario:", error);
@@ -109,9 +107,31 @@ const getState = ({ getStore, getActions, setStore }) => {
                         errorMsg: "Error de conexión.",
                         successMsg: null
                     });
+                    return false; // Fallo por error de conexión
                 }
             },
-
+            
+            login: async (email, password) => {
+                const url = apiUrl + "/api/login";
+                const opciones = {
+                    method:"POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        "email":email,
+                        "password":password
+                    })
+                };
+                const response = await fetch(url, opciones);
+                const data = await response.json();
+                if(response.status === 200){
+                    setStore({token:data.token});
+                    localStorage.setItem("token",data.token);
+                    return true;
+                } else {
+                    console.log(data.msg);
+                    return false
+                }
+            },
 		}
 	};
 };

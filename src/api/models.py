@@ -125,11 +125,7 @@ class TokenBlockedList(db.Model):
     jti = db.Column(db.String(100), nullable=False)
     
 
-# class TokenBlockedList(db.Model):
-#     __tablename__ = 'token_blocked_list'
-#     id = db.Column(db.Integer, primary_key=True)
-#     token = db.Column(db.String(500), nullable=False)
-#     created_at = db.Column(db.DateTime, nullable=False)
+
 
 
 
