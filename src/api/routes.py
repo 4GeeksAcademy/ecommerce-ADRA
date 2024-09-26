@@ -2,9 +2,15 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Product, Category, Order, OrderDetail, Super
+from flask_jwt_extended import create_access_token, get_jwt_identity, get_jwt, jwt_required
+from api.models import db, User, Product, Category, Order, OrderDetail, Super, TokenBlockedList
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
+
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
+
 
 api = Blueprint('api', __name__)
 
@@ -12,6 +18,8 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 # Signup route 
+from flask_jwt_extended import create_access_token
+
 @api.route('/signup', methods=['POST'])
 def signup():
     body = request.get_json()
@@ -40,31 +48,90 @@ def signup():
             missing_fields.append('mobile')
         if not address:
             missing_fields.append('address')
-        
+
         return jsonify({"msg": f"Faltan campos obligatorios: {', '.join(missing_fields)}"}), 400
 
+    # Verificar si el email ya está registrado
     user = User.query.filter_by(email=email).first()
     if user:
         return jsonify({"msg": "Este correo electrónico ya está registrado"}), 400
 
+    # Encriptar el password antes de guardarlo
+    encrypted_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    # Crear el nuevo usuario
     new_user = User(
         name=name,
         last_name=last_name,
         email=email,
-        password=password,
+        password=encrypted_password,  # Guardar el password encriptado
         mobile=mobile,
         address=address,
-        is_active=True 
+        is_active=True
     )
 
     try:
         db.session.add(new_user)
         db.session.commit()
+
+        # Generar el token JWT usando el id del nuevo usuario
+        token = create_access_token(identity=new_user.id, additional_claims={"role": "user"})
+
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": f"Error al crear el usuario: {str(e)}"}), 500
 
-    return jsonify({"msg": "Usuario registrado exitosamente"}), 201
+    return jsonify({"msg": "Usuario registrado exitosamente", "token": token}), 201
+
+
+# Ruta para login de usuario
+@api.route('/login', methods=['POST'])
+def login():
+    body = request.get_json()
+
+    if not body:
+        return jsonify({"msg": "Faltan datos en la solicitud"}), 400
+
+    email = body.get('email')
+    password = body.get('password')
+
+    if not email or not password:
+        return jsonify({"msg": "Correo y contraseña son obligatorios"}), 400
+
+    # Verificar si el usuario existe en la base de datos
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    # Verificar si la contraseña es correcta
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"msg": "Contraseña incorrecta"}), 401
+
+    # Generar un token JWT
+    token = create_access_token(identity=user.id, additional_claims={"role": "user"})
+
+    return jsonify({"msg": "Inicio de sesión exitoso", "token": token}), 200
+
+
+#ruta de logout
+@api.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    try:
+        jti = get_jwt()["jti"]  # Obtener el JWT ID del token actual
+        # Verificar si ya existe en la lista de tokens bloqueados
+        if TokenBlockedList.query.filter_by(jti=jti).first():
+            return jsonify({"msg": "Token ya ha sido bloqueado"}), 400
+        
+        # Guardar el token en la lista de bloqueados
+        token_blocked = TokenBlockedList(jti=jti)
+        db.session.add(token_blocked)
+        db.session.commit()
+
+        return jsonify({"msg": "Sesión cerrada exitosamente"}), 200
+    except Exception as e:
+        return jsonify({"msg": f"Error al cerrar sesión: {str(e)}"}), 500
 
 #Ruta para crear Super
 @api.route('/super', methods=["POST"])
@@ -205,3 +272,5 @@ def get_order_details(order_id):
     if not order_details:
         return jsonify({"msg": "No hay detalles para esta orden"}), 404
     return jsonify([detail.serialize() for detail in order_details]), 200
+
+

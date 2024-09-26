@@ -11,6 +11,24 @@ export const Signup = () => {
             <form>
                 <div class="form-floating mb-3">
                     <input
+                        type="text"
+                        class="form-control"
+                        id="floatingInput"
+                        placeholder="Nombre"
+                    />
+                    <label for="floatingInput">Nombre</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="floatingInput"
+                        placeholder="Apellido"
+                    />
+                    <label for="floatingInput">Apellido</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input
                         type="email"
                         class="form-control"
                         id="floatingInput"
@@ -20,14 +38,23 @@ export const Signup = () => {
                 </div>
                 <div class="form-floating mb-3">
                     <input
-                        type="password"
+                        type="number"
                         class="form-control"
-                        id="floatingPassword"
-                        placeholder="Password"
+                        id="floatingInput"
+                        placeholder="Mobile"
                     />
-                    <label for="floatingPassword">Password</label>
+                    <label for="floatingInput">Mobile</label>
                 </div>
-                <div class="form-floating">
+                <div class="form-floating mb-3">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="floatingInput"
+                        placeholder="Address"
+                    />
+                    <label for="floatingInput">Address</label>
+                </div>
+                <div class="form-floating mb-3">
                     <input
                         type="password"
                         class="form-control"

@@ -30,6 +30,22 @@ export const Navbar = () => {
                         </ul>
                     </div>
             </div>
+            <div className="ml-auto">
+                    <div className="btn-group">
+                        <button
+                            type="button"
+                            className="btn btn-primary dropdown-toggle me-5 cart-nav"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <i className="fa-solid fa-truck-fast"></i>
+                        </button>
+                        <ul className="dropdown-menu">
+                            
+                            
+                        </ul>
+                    </div>
+            </div>
         </nav>
     );
 };
