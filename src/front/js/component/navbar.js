@@ -44,6 +44,15 @@ export const Navbar = () => {
                         <button
                             type="button"
                             className="btn btn-primary me-2 cart-nav"
+                            //onClick={handleLogout} // Llama a handleLogout en el click
+                        >
+                            User
+                        </button>
+                    </div>
+                    <div className="btn-group">
+                        <button
+                            type="button"
+                            className="btn btn-primary me-2 cart-nav"
                             onClick={handleLogout} // Llama a handleLogout en el click
                         >
                             Logout
