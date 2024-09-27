@@ -112,7 +112,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             
             login: async (email, password) => {
-                const url = apiUrl + "/api/login";
+                const url = apiUrl + "/login";
                 const opciones = {
                     method:"POST",
                     headers: { "Content-Type": "application/json" },
@@ -132,6 +132,26 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false
                 }
             },
+            logout: async () => {
+                try {
+                    // Borrar el token del localStorage
+                    localStorage.removeItem('token');
+            
+                    // Limpiar el estado del store (puedes ajustar los valores según tu necesidad)
+                    setStore({
+                        token: null,
+                        user: null,
+                        successMsg: null,
+                        errorMsg: null
+                    });
+            
+                    return true; // Cierre de sesión exitoso
+                } catch (error) {
+                    console.error("Error al cerrar sesión:", error);
+                    return false; // Fallo en el cierre de sesión
+                }
+            }
+            
 		}
 	};
 };

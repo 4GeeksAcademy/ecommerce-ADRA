@@ -1,36 +1,76 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
+import { useNavigate } from "react-router-dom";  // Importa useNavigate
 import "../../styles/home.css";
 
 export const Login = () => {
-    const { store, actions } = useContext(Context);
+    const { store, actions } = useContext(Context);  // Obtenemos el store y las acciones
+    const [email, setEmail] = useState("");  // Estado para el email
+    const [password, setPassword] = useState("");  // Estado para la contraseña
+    const [errorMsg, setErrorMsg] = useState("");  // Estado para los mensajes de error
+    const navigate = useNavigate();  // Hook para redirigir al home
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Formulario enviado");
+
+        // Validación simple para no enviar campos vacíos
+        if (email === "" || password === "") {
+            setErrorMsg("Por favor, complete todos los campos.");
+            return;
+        }
+
+        // Llamar a la acción login y redirigir si es exitoso
+        const success = await actions.login(email, password);
+        console.log("Login success:", success);  // Verificar el resultado de login
+
+        if (success) {
+            navigate("/");  // Redirigir al home
+        } else {
+            setErrorMsg("Error al iniciar sesión. Verifique sus credenciales.");
+        }
+    };
 
     return (
-        <div className="text-center m-5">
-            <form>
-                <div class="form-floating mb-3">
-                    <input
-                        type="email"
-                        class="form-control"
-                        id="floatingInput"
-                        placeholder="name@example.com"
-                    />
-                    <label for="floatingInput">Email address</label>
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6">
+                    <h2 className="mb-4 text-center">Iniciar Sesión</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-floating mb-3">
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="floatingInput"
+                                placeholder="name@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}  // Actualizar estado del email
+                                required
+                            />
+                            <label htmlFor="floatingInput">Dirección de Email</label>
+                        </div>
+                        <div className="form-floating mb-3">
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="floatingPassword"
+                                placeholder="Contraseña"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}  // Actualizar estado de la contraseña
+                                required
+                            />
+                            <label htmlFor="floatingPassword">Contraseña</label>
+                        </div>
+
+                        {/* Mostrar mensaje de error si existe */}
+                        {errorMsg && <p className="text-danger">{errorMsg}</p>}
+
+                        <button type="submit" className="btn btn-primary w-100 mt-3">
+                            Iniciar Sesión
+                        </button>
+                    </form>
                 </div>
-                <div class="form-floating mb-3">
-                    <input
-                        type="password"
-                        class="form-control"
-                        id="floatingPassword"
-                        placeholder="Password"
-                    />
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">
-                    Submit
-                </button>
-            </form>
+            </div>
         </div>
     );
 };
