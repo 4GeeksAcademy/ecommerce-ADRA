@@ -5,3 +5,22 @@
     one more css for each page that will contain the selected used 
     on that page only (the ones not reused in other pages).
 */
+.card-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; /* Espacio entre las tarjetas */
+}
+
+.card {
+    width: 100%; /* Asegúrate de que la tarjeta ocupe el ancho completo de la columna */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem; /* Ajusta el margen para que se ajuste el espacio entre columnas */
+}
+
+.col-md-4 {
+    padding: 0.5rem; /* Espacio alrededor de las columnas */
+}

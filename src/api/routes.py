@@ -177,9 +177,9 @@ def add_product():
     description = body.get('description')
     price = body.get('price')
     stock = body.get('stock')
-    category_id = body.get('category_id')
+    url = body.get('url')
 
-    if not all([name, description, price, stock, category_id]):
+    if not all([name, description, price, stock, url]):
         return jsonify({"msg": "Faltan campos obligatorios"}), 400
 
     new_product = Product(
@@ -187,7 +187,7 @@ def add_product():
         description=description,
         price=price,
         stock=stock,
-        category_id=category_id
+        url=url
     )
 
     try:

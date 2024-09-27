@@ -1,272 +1,44 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 
 export const Home = () => {
     const { store, actions } = useContext(Context);
 
+    useEffect(() => {
+        actions.getProducts();
+        console.log(store.products); // Verifica los datos en la consola
+    }, [actions, store.products]);
+
     return (
-        <div className="text-center mt-1">
-            <div className="container">
-                <div className="card-group p-1">
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                content is a little bit longer.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
+        <div className="container mt-5">
+            <div className="row">
+                {store.products.map((product) => (
+                    <div key={product.id} className="col-md-4 mb-4">
+                        <div className="card">
+                            <img
+                                src={product.url}
+                                className="card-img-top"
+                                alt={product.name}
+                            />
+                            <div className="card-body">
+                                <h5 className="card-title">{product.name}</h5>
+                                <p className="card-text">{product.description}</p>
+                                <p className="card-text">
+                                    <strong>Price:</strong> ${product.price}
+                                </p>
+                            </div>
+                            <div className="card-footer">
                                 <button
                                     type="button"
                                     className="btn btn-secondary"
                                 >
                                     Add to Cart
                                 </button>
-                            </small>
+                            </div>
                         </div>
                     </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This card has supporting text below as a natural
-                                lead-in to additional content.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." class="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                card has even longer content than the first to
-                                show that equal height action.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                content is a little bit longer.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This card has supporting text below as a natural
-                                lead-in to additional content.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                card has even longer content than the first to
-                                show that equal height action.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="container">
-                <div className="card-group p-1">
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                content is a little bit longer.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This card has supporting text below as a natural
-                                lead-in to additional content.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." class="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                card has even longer content than the first to
-                                show that equal height action.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                content is a little bit longer.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This card has supporting text below as a natural
-                                lead-in to additional content.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <img src="..." className="card-img-top" alt="..." />
-                        <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
-                            <p className="card-text">
-                                This is a wider card with supporting text below
-                                as a natural lead-in to additional content. This
-                                card has even longer content than the first to
-                                show that equal height action.
-                            </p>
-                        </div>
-                        <div className="card-footer">
-                            <small className="text-body-secondary">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                >
-                                    Add to Cart
-                                </button>
-                            </small>
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
         </div>
     );

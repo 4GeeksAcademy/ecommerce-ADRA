@@ -16,6 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}],
 				token: null,
            		user: null,
+                products: [],
             	errorMsg: null,
             	successMsg: null,
 			
@@ -150,7 +151,19 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error("Error al cerrar sesión:", error);
                     return false; // Fallo en el cierre de sesión
                 }
+            },
+            getProducts: async () => {
+                try {
+                    const response = await fetch(apiUrl + "/products");  
+                    if (!response.ok) throw new Error("Error al obtener los productos");
+
+                    const data = await response.json();
+                    setStore({ products: data });
+                } catch (error) {
+                    console.error("Error fetching products: ", error);
+                }
             }
+        
             
 		}
 	};

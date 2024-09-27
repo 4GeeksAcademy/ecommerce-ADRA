@@ -45,7 +45,7 @@ class Product(db.Model):
     description = db.Column(db.String(1000), nullable=False)
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
-    category_id = db.Column(db.Integer, db.ForeignKey('Category.id'), nullable=False)
+    url = db.Column(db.String(1000),nullable=False)
 
     def __repr__(self):
         return f'<Product {self.name}>'
@@ -54,9 +54,10 @@ class Product(db.Model):
         return {
             "id": self.id,
             "name": self.name,
+            "description": self.description,
             "price": self.price,
             "stock": self.stock,
-            "category_id": self.category_id
+            "url": self.url
         }
 
 # Tabla de Categorías
