@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
-    const navigate = useNavigate(); // Inicializa el hook useNavigate
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
-        const success = await actions.logout(); // Espera el resultado del logout
+        const success = await actions.logout();
         if (success) {
-            navigate("/"); // Redirige al home si el logout fue exitoso
+            navigate("/");
         }
     };
 
@@ -51,6 +51,26 @@ export const Navbar = () => {
                     <div className="btn-group">
                         <button
                             type="button"
+                            className="btn btn-primary dropdown-toggle cart-nav mx-5"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <i className="fa-solid fa-truck-fast"></i> (
+                            {store.cart.length})
+                        </button>
+                        <ul className="dropdown-menu">
+                            {store.cart.map((item, index) => (
+                                <li key={index}>
+                                    <span className="dropdown-item">
+                                        {item.name} - ${item.price}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="btn-group">
+                        <button
+                            type="button"
                             className="btn btn-primary me-2 cart-nav"
                         >
                             <Link to="/user" className="text-white">
@@ -62,22 +82,12 @@ export const Navbar = () => {
                         <button
                             type="button"
                             className="btn btn-primary me-2 cart-nav"
-                            onClick={handleLogout} // Usa handleLogout aquí
+                            onClick={handleLogout}
                         >
                             Logout
                         </button>
                     </div>
-                    <div className="btn-group">
-                        <button
-                            type="button"
-                            className="btn btn-primary dropdown-toggle cart-nav"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <i className="fa-solid fa-truck-fast"></i>
-                        </button>
-                        <ul className="dropdown-menu"></ul>
-                    </div>
+                    
                 </div>
             )}
         </nav>

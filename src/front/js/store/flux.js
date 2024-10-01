@@ -20,6 +20,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             products: [],
             errorMsg: null,
             successMsg: null,
+            cart: []
         },
         actions: {
             // Use getActions to call a function within a fuction
@@ -273,6 +274,11 @@ const getState = ({ getStore, getActions, setStore }) => {
                 } catch (error) {
                     console.error("Error fetching products: ", error);
                 }
+            },
+            addToCart: (product) => {
+                const store = getStore();
+                const newCart = [...store.cart, product];  // Añadir el producto al carrito
+                setStore({ cart: newCart });
             },
         },
     };
