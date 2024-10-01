@@ -13,23 +13,22 @@ export const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Formulario enviado");
-
-        // Validación simple para no enviar campos vacíos
+    
         if (email === "" || password === "") {
             setErrorMsg("Por favor, complete todos los campos.");
             return;
         }
-
-        // Llamar a la acción login y redirigir si es exitoso
-        const success = await actions.login(email, password);
-        console.log("Login success:", success);  // Verificar el resultado de login
-
+    
+        const success = await actions.login(email, password); // Llamar a la acción de login
+    
         if (success) {
-            navigate("/");  // Redirigir al home
+            navigate("/"); // Redirigir si el login fue exitoso
         } else {
             setErrorMsg("Error al iniciar sesión. Verifique sus credenciales.");
         }
     };
+    
+    
 
     return (
         <div className="container mt-5">

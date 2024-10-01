@@ -8,7 +8,7 @@ export const Home = () => {
     useEffect(() => {
         actions.getProducts();
         console.log(store.products); // Verifica los datos en la consola
-    }, [actions, store.products]);
+    }, []);
 
     return (
         <div className="container mt-5">
@@ -23,7 +23,9 @@ export const Home = () => {
                             />
                             <div className="card-body">
                                 <h5 className="card-title">{product.name}</h5>
-                                <p className="card-text">{product.description}</p>
+                                <p className="card-text">
+                                    {product.description}
+                                </p>
                                 <p className="card-text">
                                     <strong>Price:</strong> ${product.price}
                                 </p>

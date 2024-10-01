@@ -18,7 +18,7 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 # Signup route 
-from flask_jwt_extended import create_access_token
+
 
 @api.route('/signup', methods=['POST'])
 def signup():
@@ -111,9 +111,31 @@ def login():
     # Generar un token JWT
     token = create_access_token(identity=user.id, additional_claims={"role": "user"})
 
-    return jsonify({"msg": "Inicio de sesión exitoso", "token": token}), 200
+    return jsonify({'token': token,
+            'name': user.name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'mobile': user.mobile,
+            'address': user.address,
+            'msg': "Login exitoso."}), 200
 
+@app.route('/user', methods=['GET'])
+@jwt_required()  # Verifica que el token esté presente y válido
+def get_user():
+    user_id = get_jwt_identity()  # Obtiene la identidad (ID del usuario) desde el token
+    user = User.query.get(user_id)  # Busca al usuario en la base de datos
 
+    if user:
+        return jsonify({
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "mobile": user.mobile,
+            "address": user.address,
+        }), 200
+    else:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    
 #ruta de logout
 @api.route('/logout', methods=['POST'])
 @jwt_required()
@@ -272,5 +294,56 @@ def get_order_details(order_id):
     if not order_details:
         return jsonify({"msg": "No hay detalles para esta orden"}), 404
     return jsonify([detail.serialize() for detail in order_details]), 200
+
+# Ruta para actualizar datos del usuario
+@api.route('/update-user', methods=['PUT'])
+@jwt_required()
+def update_user():
+    try:
+        current_user = get_jwt_identity()  # Obtener el ID del usuario actual
+        user = User.query.get(current_user)  # Busca el usuario en la base de datos 
+        print(current_user)
+        print(user)
+        if user:
+            data = request.get_json()
+            user.name = data.get('name', user.name)
+            user.last_name = data.get('last_name', user.last_name)
+            user.mobile = data.get('mobile', user.mobile)
+            user.address = data.get('address', user.address)
+
+            db.session.commit()  # Guarda los cambios
+            return jsonify({"msg": "Datos actualizados correctamente", "user": {
+                "name": user.name,
+                "last_name": user.last_name,
+                "email": user.email,
+                "mobile": user.mobile,
+                "address": user.address
+            }}), 200
+        else:
+            return jsonify({"msg": "Usuario no encontrado"}), 404
+    except Exception as error: 
+        print (error)
+        return jsonify({"error": "error"})
+    
+# Ruta para eliminar la cuenta del usuario
+@api.route('/delete-account', methods=['DELETE'])
+@jwt_required()
+def delete_account():
+    try:
+        current_user = get_jwt_identity()  # Obtener el email del usuario autenticado
+        user = User.query.get(current_user)  # Buscar usuario en la BD
+
+        if not user:
+            return jsonify({"msg": "Usuario no encontrado"}), 404
+
+        # Intentar eliminar el usuario
+        db.session.delete(user)
+        db.session.commit()  # Aplicar la eliminación en la base de datos
+
+        return jsonify({"msg": "Cuenta eliminada correctamente"}), 200
+
+    except Exception as e:
+        db.session.rollback()  # Hacer rollback en caso de error
+        return jsonify({"msg": f"Error al eliminar la cuenta: {str(e)}"}), 500
 
 

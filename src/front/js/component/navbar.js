@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate
 import { Context } from "../store/appContext";
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
-    
-    const handleLogout = () => {
-        actions.logout(); // Llama a la función logout del flux
+    const navigate = useNavigate(); // Inicializa el hook useNavigate
+
+    const handleLogout = async () => {
+        const success = await actions.logout(); // Espera el resultado del logout
+        if (success) {
+            navigate("/"); // Redirige al home si el logout fue exitoso
+        }
     };
 
     return (
@@ -24,7 +28,9 @@ export const Navbar = () => {
                             className="btn btn-primary me-2 cart-nav"
                             aria-expanded="false"
                         >
-                            <Link to="/login" className="text-white">Login</Link>
+                            <Link to="/login" className="text-white">
+                                Login
+                            </Link>
                         </button>
                     </div>
 
@@ -34,7 +40,9 @@ export const Navbar = () => {
                             className="btn btn-primary me-2 cart-nav"
                             aria-expanded="false"
                         >
-                            <Link to="/signup" className="text-white">Register</Link>
+                            <Link to="/signup" className="text-white">
+                                Register
+                            </Link>
                         </button>
                     </div>
                 </div>
@@ -44,16 +52,17 @@ export const Navbar = () => {
                         <button
                             type="button"
                             className="btn btn-primary me-2 cart-nav"
-                            //onClick={handleLogout} // Llama a handleLogout en el click
                         >
-                            User
+                            <Link to="/user" className="text-white">
+                                User
+                            </Link>
                         </button>
                     </div>
                     <div className="btn-group">
                         <button
                             type="button"
                             className="btn btn-primary me-2 cart-nav"
-                            onClick={handleLogout} // Llama a handleLogout en el click
+                            onClick={handleLogout} // Usa handleLogout aquí
                         >
                             Logout
                         </button>

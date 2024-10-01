@@ -1,64 +1,71 @@
 const apiUrl = process.env.BACKEND_URL + "/api";
 const getState = ({ getStore, getActions, setStore }) => {
-	return {
-		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}],
-				token: null,
-           		user: null,
-                products: [],
-            	errorMsg: null,
-            	successMsg: null,
-			
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
+    return {
+        store: {
+            message: null,
+            demo: [
+                {
+                    title: "FIRST",
+                    background: "white",
+                    initial: "white",
+                },
+                {
+                    title: "SECOND",
+                    background: "white",
+                    initial: "white",
+                },
+            ],
+            token: localStorage.getItem("token") || null,
+            user: null,
+            products: [],
+            errorMsg: null,
+            successMsg: null,
+        },
+        actions: {
+            // Use getActions to call a function within a fuction
+            exampleFunction: () => {
+                getActions().changeColor(0, "green");
+            },
 
-			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
-					return data;
-				}catch(error){
-					console.log("Error loading message from backend", error)
-				}
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+            getMessage: async () => {
+                try {
+                    // fetching data from the backend
+                    const resp = await fetch(process.env.BACKEND_URL + "/api");
+                    const data = await resp.json();
+                    setStore({ message: data.message });
+                    // don't forget to return something, that is how the async resolves
+                    return data;
+                } catch (error) {
+                    console.log("Error loading message from backend", error);
+                }
+            },
+            changeColor: (index, color) => {
+                //get the store
+                const store = getStore();
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+                //we have to loop the entire demo array to look for the respective index
+                //and change its color
+                const demo = store.demo.map((elm, i) => {
+                    if (i === index) elm.background = color;
+                    return elm;
+                });
 
-				//reset the global store
-				setStore({ demo: demo });
-			},
-			signup: async (name, last_name, email, password, mobile, address) => {
+                //reset the global store
+                setStore({ demo: demo });
+            },
+            signup: async (
+                name,
+                last_name,
+                email,
+                password,
+                mobile,
+                address
+            ) => {
                 try {
                     const response = await fetch(apiUrl + "/signup", {
-                        method: 'POST',
+                        method: "POST",
                         headers: {
-                            'Content-Type': 'application/json',
+                            "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
                             name: name,
@@ -69,12 +76,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                             address: address,
                         }),
                     });
-            
+
+                    // Manejo del status de la respuesta
                     if (response.ok) {
                         const data = await response.json();
                         const token = data.token;
                         if (token) {
-                            localStorage.setItem('token', token); // Guardar el token en localStorage
+                            // Guardar token y datos de usuario en el localStorage y en el store
+                            localStorage.setItem("token", token);
                             setStore({
                                 token: token,
                                 user: {
@@ -82,70 +91,171 @@ const getState = ({ getStore, getActions, setStore }) => {
                                     last_name: last_name,
                                     email: email,
                                     mobile: mobile,
-                                    address: address
+                                    address: address,
                                 },
                                 successMsg: data.msg,
-                                errorMsg: null
+                                errorMsg: null,
                             });
+                            return true; // Registro exitoso
                         } else {
                             setStore({
-                                successMsg: data.msg,
-                                errorMsg: null
+                                successMsg: null,
+                                errorMsg:
+                                    "No se pudo obtener el token. Intente nuevamente.",
                             });
+                            return false; // Falla en obtener el token
                         }
-                        return true; // Registro exitoso
                     } else {
                         const errorData = await response.json();
                         setStore({
                             errorMsg: errorData.msg,
-                            successMsg: null
+                            successMsg: null,
                         });
                         return false; // Fallo en el registro
                     }
                 } catch (error) {
                     console.error("Error al registrar usuario:", error);
                     setStore({
-                        errorMsg: "Error de conexión.",
-                        successMsg: null
+                        errorMsg: "Error de conexión o del servidor.",
+                        successMsg: null,
                     });
                     return false; // Fallo por error de conexión
                 }
             },
-            
+
             login: async (email, password) => {
-                const url = apiUrl + "/login";
-                const opciones = {
-                    method:"POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        "email":email,
-                        "password":password
-                    })
-                };
-                const response = await fetch(url, opciones);
-                const data = await response.json();
-                if(response.status === 200){
-                    setStore({token:data.token});
-                    localStorage.setItem("token",data.token);
-                    return true;
-                } else {
-                    console.log(data.msg);
-                    return false
+                try {
+                    const response = await fetch(apiUrl + "/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            password: password,
+                        }),
+                    });
+
+                    // Manejo del status de la respuesta
+                    if (response.ok) {
+                        const data = await response.json();
+                        const token = data.token;
+
+                        if (token) {
+                            // Especificar los campos del usuario como en el signup
+                            const user = {
+                                name: data.name, // Asegúrate de que el backend devuelva estos campos
+                                last_name: data.last_name,
+                                email: data.email,
+                                mobile: data.mobile,
+                                address: data.address,
+                            };
+
+                            // Guardar token y datos de usuario en el localStorage y en el store
+                            localStorage.setItem("token", token);
+                            setStore({
+                                token: token,
+                                user: user, // Guardamos los datos del usuario
+                                successMsg: data.msg,
+                                errorMsg: null,
+                            });
+                            return true; // Login exitoso
+                        } else {
+                            setStore({
+                                successMsg: null,
+                                errorMsg:
+                                    "No se pudo obtener el token. Intente nuevamente.",
+                            });
+                            return false; // Falla en obtener el token
+                        }
+                    } else {
+                        const errorData = await response.json();
+                        setStore({
+                            errorMsg: errorData.msg,
+                            successMsg: null,
+                        });
+                        return false; // Falla en el login
+                    }
+                } catch (error) {
+                    console.error("Error al iniciar sesión:", error);
+                    setStore({
+                        errorMsg: "Error de conexión o del servidor.",
+                        successMsg: null,
+                    });
+                    return false; // Falla por error de conexión
                 }
             },
+
+            loadUserData: async () => {
+                const token = localStorage.getItem("token");
+
+                if (token) {
+                    setStore({ token: token }); // Guardar token en el store
+                    const success = await getActions().getUserInfo(); // Cargar datos del usuario
+                    return success;
+                } else {
+                    return false; // No hay token
+                }
+            },
+            updateUserData: async (userData) => {
+                try {
+                    const response = await fetch(apiUrl + "/update-user", {
+                        method: "PUT", // Asegúrate de que tu backend acepte PUT para actualizaciones
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`, // Agregar el token de autorización
+                        },
+                        body: JSON.stringify(userData),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(
+                            "Error al actualizar los datos del usuario"
+                        );
+                    }
+
+                    const result = await response.json();
+                    return true; // Devuelve true si la actualización fue exitosa
+                } catch (error) {
+                    console.error("Error al actualizar usuario:", error);
+                    return false;
+                }
+            },
+
+            // Eliminar la cuenta del usuario
+            deleteAccount: async () => {
+                const store = getStore();
+                const response = await fetch(apiUrl + "/delete-account", {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${store.token}`,
+                    },
+                });
+                if (response.ok) {
+                    setStore({ token: null, user: null });
+                    localStorage.removeItem("token");
+                    return true;
+                } else {
+                    console.error("Error al eliminar la cuenta");
+                    return false;
+                }
+            },
+
             logout: async () => {
                 try {
                     // Borrar el token del localStorage
-                    localStorage.removeItem('token');
-            
+                    localStorage.removeItem("token");
+
                     // Limpiar el estado del store (puedes ajustar los valores según tu necesidad)
                     setStore({
                         token: null,
                         user: null,
                         successMsg: null,
-                        errorMsg: null
+                        errorMsg: null,
                     });
-            
+
                     return true; // Cierre de sesión exitoso
                 } catch (error) {
                     console.error("Error al cerrar sesión:", error);
@@ -154,19 +264,18 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             getProducts: async () => {
                 try {
-                    const response = await fetch(apiUrl + "/products");  
-                    if (!response.ok) throw new Error("Error al obtener los productos");
+                    const response = await fetch(apiUrl + "/products");
+                    if (!response.ok)
+                        throw new Error("Error al obtener los productos");
 
                     const data = await response.json();
                     setStore({ products: data });
                 } catch (error) {
                     console.error("Error fetching products: ", error);
                 }
-            }
-        
-            
-		}
-	};
+            },
+        },
+    };
 };
 
 export default getState;
