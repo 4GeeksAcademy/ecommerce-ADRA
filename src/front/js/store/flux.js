@@ -20,14 +20,19 @@ const getState = ({ getStore, getActions, setStore }) => {
             products: [],
             errorMsg: null,
             successMsg: null,
-            cart: []
+            cart: [],
+            total: null,
+            
         },
         actions: {
             // Use getActions to call a function within a fuction
             exampleFunction: () => {
                 getActions().changeColor(0, "green");
             },
-
+            getTotal:() => setStore({total:getStore().cart.reduce(
+                (acc, item) => acc + item.price,
+                0
+            )}),
             getMessage: async () => {
                 try {
                     // fetching data from the backend

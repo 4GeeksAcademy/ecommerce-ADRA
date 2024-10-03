@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
@@ -12,6 +12,9 @@ export const Navbar = () => {
             navigate("/");
         }
     };
+    useEffect(() => {
+        actions.getTotal();
+    }, [store.cart]);
 
     return (
         <nav className="navbar navbar-light bg-dark">
@@ -66,6 +69,14 @@ export const Navbar = () => {
                                     </span>
                                 </li>
                             ))}
+                            <li className="d-flex justify-content-center">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                >
+                                    Total: {store.total}
+                                </button>
+                            </li>
                         </ul>
                     </div>
                     <div className="btn-group">
@@ -87,7 +98,6 @@ export const Navbar = () => {
                             Logout
                         </button>
                     </div>
-                    
                 </div>
             )}
         </nav>
