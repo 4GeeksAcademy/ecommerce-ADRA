@@ -83,7 +83,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }),
                     });
 
-                    // Manejo del status de la respuesta
+                    
                     if (response.ok) {
                         const data = await response.json();
                         const token = data.token;
@@ -102,14 +102,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 successMsg: data.msg,
                                 errorMsg: null,
                             });
-                            return true; // Registro exitoso
+                            return true; 
                         } else {
                             setStore({
                                 successMsg: null,
                                 errorMsg:
                                     "No se pudo obtener el token. Intente nuevamente.",
                             });
-                            return false; // Falla en obtener el token
+                            return false; 
                         }
                     } else {
                         const errorData = await response.json();
@@ -117,7 +117,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                             errorMsg: errorData.msg,
                             successMsg: null,
                         });
-                        return false; // Fallo en el registro
+                        return false; 
                     }
                 } catch (error) {
                     console.error("Error al registrar usuario:", error);
@@ -125,7 +125,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         errorMsg: "Error de conexión o del servidor.",
                         successMsg: null,
                     });
-                    return false; // Fallo por error de conexión
+                    return false; 
                 }
             },
 
@@ -142,7 +142,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }),
                     });
 
-                    // Manejo del status de la respuesta
+                    
                     if (response.ok) {
                         const data = await response.json();
                         const token = data.token;
@@ -150,7 +150,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         if (token) {
                             // Especificar los campos del usuario como en el signup
                             const user = {
-                                name: data.name, // Asegúrate de que el backend devuelva estos campos
+                                name: data.name, 
                                 last_name: data.last_name,
                                 email: data.email,
                                 mobile: data.mobile,
@@ -161,18 +161,18 @@ const getState = ({ getStore, getActions, setStore }) => {
                             localStorage.setItem("token", token);
                             setStore({
                                 token: token,
-                                user: user, // Guardamos los datos del usuario
+                                user: user, 
                                 successMsg: data.msg,
                                 errorMsg: null,
                             });
-                            return true; // Login exitoso
+                            return true; 
                         } else {
                             setStore({
                                 successMsg: null,
                                 errorMsg:
                                     "No se pudo obtener el token. Intente nuevamente.",
                             });
-                            return false; // Falla en obtener el token
+                            return false; 
                         }
                     } else {
                         const errorData = await response.json();
@@ -180,7 +180,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                             errorMsg: errorData.msg,
                             successMsg: null,
                         });
-                        return false; // Falla en el login
+                        return false; 
                     }
                 } catch (error) {
                     console.error("Error al iniciar sesión:", error);
@@ -188,7 +188,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         errorMsg: "Error de conexión o del servidor.",
                         successMsg: null,
                     });
-                    return false; // Falla por error de conexión
+                    return false; 
                 }
             },
 
@@ -206,12 +206,12 @@ const getState = ({ getStore, getActions, setStore }) => {
             updateUserData: async (userData) => {
                 try {
                     const response = await fetch(apiUrl + "/update-user", {
-                        method: "PUT", // Asegúrate de que tu backend acepte PUT para actualizaciones
+                        method: "PUT", 
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${localStorage.getItem(
                                 "token"
-                            )}`, // Agregar el token de autorización
+                            )}`, 
                         },
                         body: JSON.stringify(userData),
                     });
@@ -223,14 +223,17 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
 
                     const result = await response.json();
-                    return true; // Devuelve true si la actualización fue exitosa
+
+                    setStore({ user: result.user });
+                    
+                    return true; 
                 } catch (error) {
                     console.error("Error al actualizar usuario:", error);
                     return false;
                 }
             },
 
-            // Eliminar la cuenta del usuario
+           
             deleteAccount: async () => {
                 const store = getStore();
                 const response = await fetch(apiUrl + "/delete-account", {
@@ -254,7 +257,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     // Borrar el token del localStorage
                     localStorage.removeItem("token");
 
-                    // Limpiar el estado del store (puedes ajustar los valores según tu necesidad)
+                    // Limpiar el estado del store 
                     setStore({
                         token: null,
                         user: null,
@@ -265,7 +268,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return true; // Cierre de sesión exitoso
                 } catch (error) {
                     console.error("Error al cerrar sesión:", error);
-                    return false; // Fallo en el cierre de sesión
+                    return false; 
                 }
             },
             getProducts: async () => {

@@ -73,6 +73,7 @@ export const Navbar = () => {
                                 <button
                                     type="button"
                                     class="btn btn-primary"
+                                    onClick={ () => navigate('/payment')}
                                 >
                                     Total: {store.total}
                                 </button>

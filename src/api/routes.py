@@ -7,6 +7,7 @@ from api.models import db, User, Product, Category, Order, OrderDetail, Super, T
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+import stripe
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -14,10 +15,12 @@ bcrypt = Bcrypt(app)
 
 api = Blueprint('api', __name__)
 
+stripe.api_key = 'sk_test_51Q7eNvD31DD0ObEk8Mz6esz4fIdfrLpW3U6WKl7U8I6pIwnDcUamqxeml3ap2CZBliowHPkVe7lqNfcwnIUcatOu00UFyrNZzx'
+
 # Allow CORS requests to this API
 CORS(api)
 
-# Signup route 
+
 
 
 @api.route('/signup', methods=['POST'])
@@ -120,7 +123,7 @@ def login():
             'msg': "Login exitoso."}), 200
 
 @app.route('/user', methods=['GET'])
-@jwt_required()  # Verifica que el token esté presente y válido
+@jwt_required() 
 def get_user():
     user_id = get_jwt_identity()  # Obtiene la identidad (ID del usuario) desde el token
     user = User.query.get(user_id)  # Busca al usuario en la base de datos
@@ -142,7 +145,7 @@ def get_user():
 def logout():
     try:
         jti = get_jwt()["jti"]  # Obtener el JWT ID del token actual
-        # Verificar si ya existe en la lista de tokens bloqueados
+        # Revisar si ya existe en la lista de tokens bloqueados...
         if TokenBlockedList.query.filter_by(jti=jti).first():
             return jsonify({"msg": "Token ya ha sido bloqueado"}), 400
         
@@ -155,7 +158,7 @@ def logout():
     except Exception as e:
         return jsonify({"msg": f"Error al cerrar sesión: {str(e)}"}), 500
 
-#Ruta para crear Super
+
 @api.route('/super', methods=["POST"])
 def super():
     email = request.json.get("email", None)
@@ -245,7 +248,7 @@ def create_order():
     user_id = body.get('user_id')
     total_amount = body.get('total_amount')
     status = body.get('status')
-    order_details = body.get('order_details')  # Es una lista de objetos con product_id y quantity
+    order_details = body.get('order_details')  
 
     if not all([user_id, total_amount, status, order_details]):
         return jsonify({"msg": "Faltan campos obligatorios"}), 400
@@ -311,7 +314,7 @@ def update_user():
             user.mobile = data.get('mobile', user.mobile)
             user.address = data.get('address', user.address)
 
-            db.session.commit()  # Guarda los cambios
+            db.session.commit() 
             return jsonify({"msg": "Datos actualizados correctamente", "user": {
                 "name": user.name,
                 "last_name": user.last_name,
@@ -345,5 +348,22 @@ def delete_account():
     except Exception as e:
         db.session.rollback()  # Hacer rollback en caso de error
         return jsonify({"msg": f"Error al eliminar la cuenta: {str(e)}"}), 500
+    
 
+@api.route('/create-payment', methods=['POST'])
+def create_payment():
+        try:
+            data = request.json
+            intent = stripe.PaymentIntent.create(
+                amount=data['amount'],
+                currency=data['currency'],
+                automatic_payment_methods={
+                    'enabled': True
+                }
 
+            )
+            return jsonify({
+                'clientSecret': intent['client_secret']
+            })
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)})

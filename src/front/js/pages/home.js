@@ -30,7 +30,7 @@ export const Home = () => {
                                 <button
                                     type="button"
                                     className="btn btn-secondary"
-                                    onClick={() => actions.addToCart(product)} // Llamada a la acción para añadir al carrito
+                                    onClick={() => actions.addToCart(product)} 
                                 >
                                     Add to Cart
                                 </button>

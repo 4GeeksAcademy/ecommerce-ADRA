@@ -7,7 +7,7 @@ export const User = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({
         name: '',
-        last_name: '',  // Campo de apellido agregado
+        last_name: '',  
         email: '',
         mobile: '',
         address: ''
@@ -20,7 +20,7 @@ export const User = () => {
             actions.loadUserData(); // Cargar los datos del usuario si hay token
             setUserData({
                 name: store.user?.name || '',
-                last_name: store.user?.last_name || '', // Establecer apellido
+                last_name: store.user?.last_name || '', 
                 email: store.user?.email || '',
                 mobile: store.user?.mobile || '',
                 address: store.user?.address || ''
