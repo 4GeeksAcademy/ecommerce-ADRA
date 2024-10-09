@@ -22,7 +22,7 @@ export const Login = () => {
         const success = await actions.login(email, password); // Llamar a la acción de login
     
         if (success) {
-            navigate("/"); // Redirigir si el login fue exitoso
+            navigate("/"); 
         } else {
             setErrorMsg("Error al iniciar sesión. Verifique sus credenciales.");
         }
@@ -43,7 +43,7 @@ export const Login = () => {
                                 id="floatingInput"
                                 placeholder="name@example.com"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}  // Actualizar estado del email
+                                onChange={(e) => setEmail(e.target.value)} 
                                 required
                             />
                             <label htmlFor="floatingInput">Dirección de Email</label>
@@ -55,7 +55,7 @@ export const Login = () => {
                                 id="floatingPassword"
                                 placeholder="Contraseña"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}  // Actualizar estado de la contraseña
+                                onChange={(e) => setPassword(e.target.value)}  
                                 required
                             />
                             <label htmlFor="floatingPassword">Contraseña</label>

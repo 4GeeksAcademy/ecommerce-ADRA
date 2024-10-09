@@ -13,7 +13,7 @@ export const Payment = () => {
 	
 	return (
 		<div className="text-center mt-5">
-			<h1>Stripe implementation</h1>
+			<h1>Stripe payment</h1>
 			<Elements stripe={stripePromise}>
 				<CheckoutForm />
 			</Elements>

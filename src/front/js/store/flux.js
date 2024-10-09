@@ -88,7 +88,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         const data = await response.json();
                         const token = data.token;
                         if (token) {
-                            // Guardar token y datos de usuario en el localStorage y en el store
+                            
                             localStorage.setItem("token", token);
                             setStore({
                                 token: token,
