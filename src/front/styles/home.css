@@ -24,3 +24,15 @@
 .col-md-4 {
     padding: 0.5rem; /* Espacio alrededor de las columnas */
 }
+
+.footer {
+    background-color: #edede9;
+    color: #000000;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    /* position: relative !important; */
+    bottom: 0;
+    left: 0;
+    margin-top: 30rem;
+}

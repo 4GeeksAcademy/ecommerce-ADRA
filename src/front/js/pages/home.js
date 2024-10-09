@@ -10,7 +10,7 @@ export const Home = () => {
     }, []);
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-3">
             <div className="row">
                 {store.products.map((product) => (
                     <div key={product.id} className="col-md-4 mb-4">
@@ -30,7 +30,7 @@ export const Home = () => {
                                 <button
                                     type="button"
                                     className="btn btn-secondary"
-                                    onClick={() => actions.addToCart(product)} 
+                                    onClick={() => actions.addToCart(product)}
                                 >
                                     Add to Cart
                                 </button>

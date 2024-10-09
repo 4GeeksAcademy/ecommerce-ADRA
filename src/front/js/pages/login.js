@@ -1,34 +1,32 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
-import { useNavigate } from "react-router-dom";  // Importa useNavigate
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import "../../styles/home.css";
 
 export const Login = () => {
-    const { store, actions } = useContext(Context);  // Obtenemos el store y las acciones
-    const [email, setEmail] = useState("");  // Estado para el email
-    const [password, setPassword] = useState("");  // Estado para la contraseña
-    const [errorMsg, setErrorMsg] = useState("");  // Estado para los mensajes de error
-    const navigate = useNavigate();  // Hook para redirigir al home
+    const { store, actions } = useContext(Context); // Obtenemos el store y las acciones
+    const [email, setEmail] = useState(""); // Estado para el email
+    const [password, setPassword] = useState(""); // Estado para la contraseña
+    const [errorMsg, setErrorMsg] = useState(""); // Estado para los mensajes de error
+    const navigate = useNavigate(); // Hook para redirigir al home
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Formulario enviado");
-    
+
         if (email === "" || password === "") {
             setErrorMsg("Por favor, complete todos los campos.");
             return;
         }
-    
+
         const success = await actions.login(email, password); // Llamar a la acción de login
-    
+
         if (success) {
-            navigate("/"); 
+            navigate("/");
         } else {
             setErrorMsg("Error al iniciar sesión. Verifique sus credenciales.");
         }
     };
-    
-    
 
     return (
         <div className="container mt-5">
@@ -43,10 +41,12 @@ export const Login = () => {
                                 id="floatingInput"
                                 placeholder="name@example.com"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)} 
+                                onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
-                            <label htmlFor="floatingInput">Dirección de Email</label>
+                            <label htmlFor="floatingInput">
+                                Dirección de Email
+                            </label>
                         </div>
                         <div className="form-floating mb-3">
                             <input
@@ -55,16 +55,18 @@ export const Login = () => {
                                 id="floatingPassword"
                                 placeholder="Contraseña"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}  
+                                onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
                             <label htmlFor="floatingPassword">Contraseña</label>
                         </div>
 
-                        {/* Mostrar mensaje de error si existe */}
                         {errorMsg && <p className="text-danger">{errorMsg}</p>}
 
-                        <button type="submit" className="btn btn-primary w-100 mt-3">
+                        <button
+                            type="submit"
+                            className="btn btn-primary w-100 mt-3"
+                        >
                             Iniciar Sesión
                         </button>
                     </form>

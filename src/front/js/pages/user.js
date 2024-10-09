@@ -15,9 +15,9 @@ export const User = () => {
 
     useEffect(() => {
         if (!store.token) {
-            navigate("/login"); // Redirigir si no hay token
+            navigate("/login"); 
         } else {
-            actions.loadUserData(); // Cargar los datos del usuario si hay token
+            actions.loadUserData(); 
             setUserData({
                 name: store.user?.name || '',
                 last_name: store.user?.last_name || '', 
@@ -26,12 +26,12 @@ export const User = () => {
                 address: store.user?.address || ''
             });
         }
-    }, [store.token, store.user]); // Verificar el token al montar el componente
+    }, [store.token, store.user]); 
 
     // Manejo de la modificación de datos
     const handleUpdate = async (e) => {
         e.preventDefault();
-        const result = await actions.updateUserData(userData); // Implementa la función updateUserData en actions
+        const result = await actions.updateUserData(userData); 
         if (result) {
             alert("Datos actualizados exitosamente");
         } else {

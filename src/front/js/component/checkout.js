@@ -56,7 +56,15 @@ export const CheckoutForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <CardElement />
-            <button type="submit" disabled={!stripe || loading}>
+            <button
+                type="submit"
+                className="btn btn-primary mt-5"
+                disabled={!stripe || loading}
+                onClick={() => {
+                    alert("Pago exitoso");
+                    window.location.href = "/home";
+                }}
+            >
                 Pay
             </button>
         </form>
