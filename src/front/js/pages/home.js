@@ -13,8 +13,8 @@ export const Home = () => {
         <div className="container mt-3">
             <div className="row">
                 {store.products.map((product) => (
-                    <div key={product.id} className="col-md-4 mb-4">
-                        <div className="card">
+                    <div key={product.id} className="caja col-md-4 mb-1 pb-1">
+                        <div className="card pb-1">
                             <img
                                 src={product.url}
                                 className="card-img-top"

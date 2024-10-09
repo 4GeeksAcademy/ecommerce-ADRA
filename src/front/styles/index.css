@@ -8,17 +8,19 @@ a {
 .cart-nav {
     color: fff;
 }
-
+.container {
+    padding-bottom: 60px;
+}
 .footer {
     background-color: #edede9;
     color: #000000;
     text-align: center;
-    padding: 10px 0;
+    padding: 5px 0;
     width: 100%;
-    position: fixed !important;
+    position: fixed;
     bottom: 0;
     left: 0;
-    margin-top: 30rem;
+    margin-top: 60px;
 }
 .card-group {
     display: flex;
@@ -28,8 +30,11 @@ a {
 
 .card {
     width: 100%; /* Asegúrate de que la tarjeta ocupe el ancho completo de la columna */
+    margin-bottom: 0px;
 }
-
+.caja {
+    padding: 2px !important;
+}
 .row {
     display: flex;
     flex-wrap: wrap;

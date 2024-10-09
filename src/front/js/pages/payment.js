@@ -19,7 +19,7 @@ export const Payment = () => {
 
     return (
         <div className="text-center mt-5">
-            <h1 className="mb-4">Stripe payment</h1>
+            <h1 className="mb-4">Realiza tu pago.</h1>
             <Elements stripe={stripePromise}>
                 <CheckoutForm />
             </Elements>

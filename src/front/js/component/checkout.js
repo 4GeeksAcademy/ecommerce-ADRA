@@ -54,7 +54,7 @@ export const CheckoutForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="w-25 m-auto mt-4" onSubmit={handleSubmit}>
             <CardElement />
             <button
                 type="submit"
@@ -62,7 +62,7 @@ export const CheckoutForm = () => {
                 disabled={!stripe || loading}
                 onClick={() => {
                     alert("Pago exitoso");
-                    window.location.href = "/home";
+                    window.location.href = "/";
                 }}
             >
                 Pay

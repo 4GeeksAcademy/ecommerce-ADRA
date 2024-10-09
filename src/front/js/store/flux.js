@@ -22,17 +22,19 @@ const getState = ({ getStore, getActions, setStore }) => {
             successMsg: null,
             cart: [],
             total: null,
-            
         },
         actions: {
             // Use getActions to call a function within a fuction
             exampleFunction: () => {
                 getActions().changeColor(0, "green");
             },
-            getTotal:() => setStore({total:getStore().cart.reduce(
-                (acc, item) => acc + item.price,
-                0
-            )}),
+            getTotal: () =>
+                setStore({
+                    total: getStore().cart.reduce(
+                        (acc, item) => acc + item.price,
+                        0
+                    ),
+                }),
             getMessage: async () => {
                 try {
                     // fetching data from the backend
@@ -83,12 +85,10 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }),
                     });
 
-                    
                     if (response.ok) {
                         const data = await response.json();
                         const token = data.token;
                         if (token) {
-                            
                             localStorage.setItem("token", token);
                             setStore({
                                 token: token,
@@ -102,14 +102,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 successMsg: data.msg,
                                 errorMsg: null,
                             });
-                            return true; 
+                            return true;
                         } else {
                             setStore({
                                 successMsg: null,
                                 errorMsg:
                                     "No se pudo obtener el token. Intente nuevamente.",
                             });
-                            return false; 
+                            return false;
                         }
                     } else {
                         const errorData = await response.json();
@@ -117,7 +117,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                             errorMsg: errorData.msg,
                             successMsg: null,
                         });
-                        return false; 
+                        return false;
                     }
                 } catch (error) {
                     console.error("Error al registrar usuario:", error);
@@ -125,7 +125,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         errorMsg: "Error de conexión o del servidor.",
                         successMsg: null,
                     });
-                    return false; 
+                    return false;
                 }
             },
 
@@ -142,7 +142,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }),
                     });
 
-                    
                     if (response.ok) {
                         const data = await response.json();
                         const token = data.token;
@@ -150,7 +149,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         if (token) {
                             // Especificar los campos del usuario como en el signup
                             const user = {
-                                name: data.name, 
+                                name: data.name,
                                 last_name: data.last_name,
                                 email: data.email,
                                 mobile: data.mobile,
@@ -161,18 +160,18 @@ const getState = ({ getStore, getActions, setStore }) => {
                             localStorage.setItem("token", token);
                             setStore({
                                 token: token,
-                                user: user, 
+                                user: user,
                                 successMsg: data.msg,
                                 errorMsg: null,
                             });
-                            return true; 
+                            return true;
                         } else {
                             setStore({
                                 successMsg: null,
                                 errorMsg:
                                     "No se pudo obtener el token. Intente nuevamente.",
                             });
-                            return false; 
+                            return false;
                         }
                     } else {
                         const errorData = await response.json();
@@ -180,7 +179,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                             errorMsg: errorData.msg,
                             successMsg: null,
                         });
-                        return false; 
+                        return false;
                     }
                 } catch (error) {
                     console.error("Error al iniciar sesión:", error);
@@ -188,7 +187,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         errorMsg: "Error de conexión o del servidor.",
                         successMsg: null,
                     });
-                    return false; 
+                    return false;
                 }
             },
 
@@ -206,12 +205,12 @@ const getState = ({ getStore, getActions, setStore }) => {
             updateUserData: async (userData) => {
                 try {
                     const response = await fetch(apiUrl + "/update-user", {
-                        method: "PUT", 
+                        method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${localStorage.getItem(
                                 "token"
-                            )}`, 
+                            )}`,
                         },
                         body: JSON.stringify(userData),
                     });
@@ -225,15 +224,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const result = await response.json();
 
                     setStore({ user: result.user });
-                    
-                    return true; 
+
+                    return true;
                 } catch (error) {
                     console.error("Error al actualizar usuario:", error);
                     return false;
                 }
             },
 
-           
             deleteAccount: async () => {
                 const store = getStore();
                 const response = await fetch(apiUrl + "/delete-account", {
@@ -257,7 +255,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     // Borrar el token del localStorage
                     localStorage.removeItem("token");
 
-                    // Limpiar el estado del store 
+                    // Limpiar el estado del store
                     setStore({
                         token: null,
                         user: null,
@@ -268,7 +266,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return true; // Cierre de sesión exitoso
                 } catch (error) {
                     console.error("Error al cerrar sesión:", error);
-                    return false; 
+                    return false;
                 }
             },
             getProducts: async () => {
@@ -285,7 +283,12 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             addToCart: (product) => {
                 const store = getStore();
-                const newCart = [...store.cart, product];  // Añadir el producto al carrito
+                const newCart = [...store.cart, product];
+                setStore({ cart: newCart });
+            },
+            deleteFromCart: (index) => {
+                const store = getStore();
+                const newCart = store.cart.filter((_, i) => i !== index);
                 setStore({ cart: newCart });
             },
         },

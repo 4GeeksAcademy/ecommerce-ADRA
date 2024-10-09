@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
+import { MdDelete } from "react-icons/md";
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
@@ -63,17 +64,25 @@ export const Navbar = () => {
                         </button>
                         <ul className="dropdown-menu">
                             {store.cart.map((item, index) => (
-                                <li key={index}>
+                                <li
+                                    className="d-flex align-items-center"
+                                    key={index}
+                                >
                                     <span className="dropdown-item">
                                         {item.name} - ${item.price}
-                                    </span>
+                                    </span>{" "}
+                                    <MdDelete
+                                        onClick={() => {
+                                            actions.deleteFromCart(index);
+                                        }}
+                                    />
                                 </li>
                             ))}
                             <li className="d-flex justify-content-center">
                                 <button
                                     type="button"
                                     class="btn btn-primary"
-                                    onClick={ () => navigate('/payment')}
+                                    onClick={() => navigate("/payment")}
                                 >
                                     Total: {store.total}
                                 </button>
